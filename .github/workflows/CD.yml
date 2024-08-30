@@ -32,7 +32,7 @@ jobs:
             **/obj/Release/
 
   deploy-uat:
-    runs-on: SYSUAT32
+    runs-on: self-hosted
     needs: build
     if: github.event_name == 'workflow_dispatch'
     steps:
