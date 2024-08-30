@@ -31,7 +31,7 @@ jobs:
             **/bin/Release/
             **/obj/Release/
 
-  deploy-uat:
+  deploy-local:
     runs-on: self-hosted
     needs: build
     if: github.event_name == 'workflow_dispatch'
@@ -39,8 +39,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to UAT
+      - name: Create Deployment Directory
+        run: mkdir -p C:\Users\SMALLAPR\source\repos
+
+      - name: Copy Build Artifacts
         run: |
-          echo "Deploying to UAT environment"
-          scp -r ./build/ user@uat-server:/var/www/myapp/
-          ssh user@uat-server 'sudo systemctl restart myapp'
+          echo "Deploying to local folder"
+          cp -r ./build/* C:\Users\SMALLAPR\source\repos
