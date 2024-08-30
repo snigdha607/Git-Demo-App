@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore WebApp_Git.sln
+
+      - name: Build App
+        run: msbuild WebApp_Git.sln /p:Configuration=Release
+
+      - name: Publish Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: |
+            **/bin/Release/
+            **/obj/Release/
+
+  deploy-uat:
+    runs-on: SYSUAT32
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to UAT
+        run: |
+          echo "Deploying to UAT environment"
+          scp -r ./build/ user@uat-server:/var/www/myapp/
+          ssh user@uat-server 'sudo systemctl restart myapp'
