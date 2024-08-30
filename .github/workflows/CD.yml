@@ -39,7 +39,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create Deployment Directory
+        run: mkdir -p C:\Users\SMALLAPR\source\repos\deploy
+
       - name: Copy Build Artifacts
         run: |
           echo "Deploying to local folder"
-          cp -r ./build/* C:\Users\SMALLAPR\source\repos\
+          cp -r C:\Users\SMALLAPR\actions-runner\_work\Git-Demo-App\Git-Demo-App\bin\Release\* C:\Users\SMALLAPR\source\repos\deploy\
