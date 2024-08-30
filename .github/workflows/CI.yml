@@ -12,22 +12,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '4.6.2'
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
 
     - name: Restore dependencies
       run: dotnet restore WebApp_Git.sln
 
     - name: Build
-      run: dotnet build WebApp_Git.sln --configuration Release --no-restore
-
-    - name: Publish artifact
-      run: dotnet publish -c Release -o ./publish
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: published-app
-        path: ./publish
+      run: dotnet build WebApp_Git.sln /p:configuration=Release
