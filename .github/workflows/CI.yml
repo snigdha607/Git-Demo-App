@@ -7,18 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
-
+    runs-on: windows-latest
+ 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.0.2
-
-
-    - name: Restore dependencies
-      run: dotnet restore WebApp_Git.sln
-
-    - name: Build
-      run: dotnet build WebApp_Git.sln /p:configuration=Release
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1         
+ 
+      - name: Build App
+        run: msbuild WebApp_Git.sln
