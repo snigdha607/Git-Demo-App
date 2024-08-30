@@ -8,13 +8,35 @@ on:
 jobs:
   build:
     runs-on: windows-latest
- 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
- 
+
       - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@v1         
- 
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore WebApp_Git.sln
+
       - name: Build App
-        run: msbuild WebApp_Git.sln
+        run: msbuild WebApp_Git.sln /p:Configuration=Release
+
+      - name: Run tests
+        run: |
+          vstest.console.exe **\*.Tests.dll --logger:trx
+
+      - name: Publish Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestResults
+          path: '**/*.trx'
+
+      - name: Publish Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: |
+            **/bin/Release/
+            **/obj/Release/
