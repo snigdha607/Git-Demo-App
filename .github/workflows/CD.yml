@@ -24,7 +24,7 @@ jobs:
         run: msbuild WebApp_Git.sln /p:Configuration=Release
 
       - name: Publish Build Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           path: |
